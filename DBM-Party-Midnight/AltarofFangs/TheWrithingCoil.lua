@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 local warnSynchonizedVenom			= mod:NewCountAnnounce(1299154, 3)
 
 local specWarnTailScythe			= mod:NewSpecialWarningDefensive(1298949, nil, nil, nil, 1, 2, nil, nil, "defensive")
-local specWarnVindictiveOnslaught	= mod:NewSpecialWarningCount(1299940, nil, nil, nil, 2, 2, nil, nil, "watchstep")
+local specWarnVindictiveOnslaught	= mod:NewSpecialWarningCount(1299940, nil, nil, nil, 2, 15, nil, nil, "frontal")
 local specWarnDeathRattle			= mod:NewSpecialWarningCount(1299053, nil, nil, nil, 2, 14, nil, nil, "breakvine")--Verify audio
 local specWarnSpitefulHunt			= mod:NewSpecialWarningYou(1300503, nil, nil, nil, 2, 19, nil, nil, "fixateyou")--Change to blizzyou?
 local specWarnAssimilation			= mod:NewSpecialWarningSwitchCount(1300686, nil, nil, nil, 1, 2, nil, nil, "targetchange")
@@ -37,6 +37,7 @@ mod.vb.VindictiveOnslaughtCount = 0
 mod.vb.DeathRattleCount = 0
 mod.vb.AssimilationCount = 0
 mod.vb.ToxicAtrophyCount = 0
+mod.vb.ToxicBarrageCount = 0
 
 ---@param self DBMMod
 ---@param dontSetAlerts boolean? Called on engage when we only want to set timeline parameters and not touch encounter alerts
@@ -46,7 +47,7 @@ local function setFallback(self, dontSetAlerts)
 			specWarnTailScythe:SetAlert(814, "defensive", 2)
 		end
 		warnSynchonizedVenom:SetAlert(813, "aesoon", 2, 3)
-		specWarnVindictiveOnslaught:SetAlert(815, "watchstep", 2, 2)
+		specWarnVindictiveOnslaught:SetAlert(815, "frontal", 15, 2)
 		specWarnDeathRattle:SetAlert(816, "breakvine", 14, 2)
 		specWarnSpitefulHunt:SetAlert(817, "fixateyou", 19, 2, 0)
 		specWarnAssimilation:SetAlert(818, "targetchange", 2, 2, 0)
@@ -72,6 +73,7 @@ function mod:OnLimitedCombatStart()
 	self.vb.DeathRattleCount = 1
 	self.vb.AssimilationCount = 1
 	self.vb.ToxicAtrophyCount = 1
+	self.vb.ToxicBarrageCount = 1
 	nextTenIsToxicAtrophy = true
 	if DBM.Options.HardcodedTimer and not badStateDetected then
 		self:IgnoreBlizzardAPI()
@@ -111,7 +113,7 @@ do
 				timerSynchonizedVenomCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "synchonizedVenom", "SynchonizedVenomCount"))
 			end
 		elseif timer == 14 or timer == 23 then
-			timerToxicBarrageCD:TLStart(timerExact, eventID)
+			timerToxicBarrageCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "toxicBarrage", "ToxicBarrageCount"))
 		elseif timer == 25 then
 			self:TLCountStart(eventID, "assimilation", "AssimilationCount")
 		elseif timer == 30 or timer == 39 then
@@ -152,7 +154,7 @@ do
 					specWarnTailScythe:Play("defensive")
 				elseif eventType == "vindictiveOnslaught" then
 					specWarnVindictiveOnslaught:Show(eventCount)
-					specWarnVindictiveOnslaught:Play("watchstep")
+					specWarnVindictiveOnslaught:Play("frontal")
 				elseif eventType == "deathRattle" then
 					specWarnDeathRattle:Show(eventCount)
 					specWarnDeathRattle:Play("breakvine")
