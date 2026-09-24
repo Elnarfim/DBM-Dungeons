@@ -10,7 +10,7 @@ mod:SetZone(1762)
 
 mod:RegisterCombat("combat")
 
-if DBM:IsPostMidnight() then
+if DBM:IsRestricted() then
 	DBM:RegisterAltSpellName(269369, DBM_COMMON_L.INTERRUPT)--Deadly Roar --> Interrupt
 	DBM:RegisterAltSpellName(268586, DBM_COMMON_L.TANKBUSTER)--Blade Combo --> Tank Buster
 	DBM:RegisterAltSpellName(1303267, DBM_COMMON_L.AOEDAMAGE)--Gilded Destruction --> AoE Damage
@@ -116,7 +116,7 @@ if DBM:IsPostMidnight() then
 				timerBladeComboCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "bladeCombo", "bladeComboCount"))
 			elseif timer == 30 or timer == 24 then
 				timerGildedDestructionCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "gildedDestruction", "gildedDestructionCount"))
-			elseif timer == 8 then
+			elseif timer == 8 or timer == 28 then
 				timerHuntingLeapCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "huntingLeap", "huntingLeapCount"))
 			elseif timer == 10 then
 				--All 12.1 M+ pulls alternate the ambiguous 10-second bucket: Hunting Leap, then Deathly Roar.

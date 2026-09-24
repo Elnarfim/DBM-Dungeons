@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 DBM:RegisterAltSpellName(265773, DBM_COMMON_L.POOLS)--Spit Gold --> Pools
 DBM:RegisterAltSpellName(265910, DBM_COMMON_L.TANKBUSTER)--Tail Thrash --> Tank Buster
 DBM:RegisterAltSpellName(265923, DBM_COMMON_L.ADDS)--Lucre Call --> Kill Mob
-if DBM:IsPostMidnight() then
+if DBM:IsRestricted() then
 	DBM:RegisterAltSpellName(1311987, DBM_COMMON_L.PUSHBACK)--Serpentine --> Pushback
 	local warnSpitGold					= mod:NewCountAnnounce(265773, 2)--Cast count for use in hardode only
 
@@ -48,7 +48,7 @@ if DBM:IsPostMidnight() then
 			else
 				specWarnLucreCall:SetAlert(893, "killmob", 2)
 			end
-			specWarnSerpentine:SetAlert(892, "justrun", 2)
+			specWarnSerpentine:SetAlert(892, "pushbackincoming", 13)
 		end
 		local onlyColor = not DBM.Options.HideDBMBars and not badStateDetected
 		timerTailThrashCD:SetTimeline(891, onlyColor)
@@ -146,7 +146,7 @@ if DBM:IsPostMidnight() then
 					end
 				elseif eventType == "serpentine" and eventCount then
 					specWarnSerpentine:Show(eventCount)
-					specWarnSerpentine:Play("justrun")
+					specWarnSerpentine:Play("pushbackincoming")
 				end
 			elseif eventState == 3 then
 				self:TLCountCancel(eventID)
